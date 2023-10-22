@@ -130,5 +130,5 @@ dist
 .pnp.*
 
 # hardhat
-./backend/cache
-./backed/artifacts
+.backend/cache
+.backed/artifacts
