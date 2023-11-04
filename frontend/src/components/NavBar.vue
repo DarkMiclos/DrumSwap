@@ -1,11 +1,30 @@
 <script lang="ts">
-  import { defineComponent } from "vue";
+  import { defineComponent, onMounted, ref, computed } from "vue";
+  import { key, store } from '../store/store'
+  const isMetamaskSupported = ref(false);
+  onMounted(() => {
+    isMetamaskSupported.value = (window as any).ethereum != "undefined";
+  })
   export default defineComponent({
     methods: {
       setActive() {
         let navbar = document.getElementById("nav-bar");
         navbar?.classList.toggle("active");
       },
+      async connectWallet() {
+        const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+        store.state.address = accounts[0];
+        store.state.isWalletConnected = true;
+      },
+      getIsWalletConnected() {
+        return store.state.isWalletConnected;
+      },
+      getAddress() {
+        return store.state.address.substring(0,6) + "..." + store.state.address.substring(38,42);
+      },
+      disconnectWallet() {
+        store.state.isWalletConnected = false;
+      }
     }
   })
 </script>
@@ -13,7 +32,6 @@
 <template>
   <header>
     <router-link to="/" id="logo">DrumSwap</router-link>
-    
     <div id="hamburger" @click="setActive">
       <div class="line"></div>
       <div class="line"></div>
@@ -29,21 +47,27 @@
         </li>
       </ul>
     </nav>
-    <a class="connect-wallet" href="">Connect Wallet</a>
+    <div class="connect-wallet-container">
+      <div class="address" v-if="getIsWalletConnected() === true">{{ getAddress() }}</div>
+      <a class="connect-wallet" @click="disconnectWallet" v-if="getIsWalletConnected() === true">Disconnect</a>
+      <a class="connect-wallet" @click="connectWallet()" v-if="getIsWalletConnected() === false">Connect Wallet</a>
+    </div>
+    
   </header>
 </template>
 
 <style scoped>
 header {
   height: 8vh;
-  background: #11101b;
+  background: #0f0f0f;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 5vw;
+  padding: 0 4vw;
 }
 
 #logo {
+  width: 150px;
   font-size: 28px;
   font-weight: bold;
   color: rgb(255, 0, 122);
@@ -76,10 +100,25 @@ header {
 }
 
 a.connect-wallet {
+  width: 150px;
   padding: 10px 25px;
+  text-align: center;
   border-radius: 50px;
   color:#fefefe;
   background: rgb(255, 0, 122);
+  margin: 0px 0px 0px 20px;
+  cursor: pointer;
+}
+
+div.connect-wallet-container {
+  width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+div.address {
 }
 
 @media only screen and (max-width: 900px) {
