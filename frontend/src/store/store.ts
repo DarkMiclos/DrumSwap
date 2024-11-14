@@ -5,7 +5,9 @@ import createPersistedState from "vuex-persistedstate";
 // define your typings for the store state
 export interface State {
   isWalletConnected: boolean,
-  address: string
+  address: string,
+  isChooseToken: boolean,
+  tokenIndex: number,
 }
 
 // define injection key
@@ -18,6 +20,8 @@ export const store = createStore<State>({
   state: {
     isWalletConnected: false,
     address: "",
+    isChooseToken: false,
+    tokenIndex: 0,
   },
   getters: {
     getIsWalletConnected(state) {
@@ -25,6 +29,12 @@ export const store = createStore<State>({
     },
     getAddress(state) {
       return state.address;
+    },
+    getIsChooseToken(state) {
+      return state.isChooseToken;
+    },
+    getTokenIndex(state) {
+      return state.tokenIndex;
     }
   },
   mutations: {
@@ -33,6 +43,12 @@ export const store = createStore<State>({
     },
     setAddress(state, value) {
       state.address = value
+    },
+    setChooseToken(state, value) {
+      state.isChooseToken = value
+    },
+    setTokenIndex(state, value) {
+      state.tokenIndex = value
     }
   },
   actions: {},

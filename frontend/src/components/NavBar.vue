@@ -110,15 +110,16 @@ a.connect-wallet {
   cursor: pointer;
 }
 
+a.connect-wallet:hover {
+  background-color: rgba(255, 0, 122, 0.8);
+}
+
 div.connect-wallet-container {
   width: 250px;
   display: flex;
   justify-content: center;
   align-items: center;
   
-}
-
-div.address {
 }
 
 @media only screen and (max-width: 900px) {
